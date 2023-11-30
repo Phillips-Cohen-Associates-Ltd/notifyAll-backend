@@ -1,0 +1,15 @@
+__pycache__
+venv/
+.env
+*.db
+.chroma
+app/__pycache__
+app/uploads/
+app/config/__pycache__
+app/models/__pycache__
+app/routes/__pycache__
+app/schemas/__pycache__
+app/service/__pycache__
+app/repository/__pycache__
+alembic/__pycache__
+alembic/versions/__pycache__
