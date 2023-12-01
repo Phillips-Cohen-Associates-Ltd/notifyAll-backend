@@ -1,12 +1,10 @@
 from logging.config import fileConfig
-<<<<<<< HEAD
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from alembic import context
 from os.path import dirname, abspath
 import sys
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
-=======
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
@@ -16,8 +14,6 @@ from os.path import dirname, abspath
 import sys
 
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
-
->>>>>>> 8ddb522b8117e4a3318c8dd16e6d87511e845659
 from app.config.config import settings
 from app.models.usermodel import Base
 
@@ -33,10 +29,6 @@ config.set_section_option(section, "DB_PASS", settings.POSTGRES_PASSWORD)
 config.set_section_option(section, "DB_HOST", settings.POSTGRES_HOSTNAME)
 config.set_section_option(section, "DB_NAME", settings.POSTGRES_DB)
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 8ddb522b8117e4a3318c8dd16e6d87511e845659
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
 if config.config_file_name is not None:
