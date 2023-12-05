@@ -100,7 +100,7 @@ def email_verification(payload: UserEmailVerificationSchema, db: Session):
 def forgot_password_by_email(user: ForgotPasswordSchema, db:Session):
    identify_user = db.query(Users).filter(Users.email==user.email).first()
    if not identify_user:
-       return "This email doesn't exist please try again"
+       return 
    
    user = Users(
         email = user.email,

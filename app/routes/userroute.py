@@ -160,6 +160,7 @@ def delete_user(userId: str, db: Session = Depends(get_db), currentUser:usermode
     return {"msg":f"Successfully deleted user with id {userId}"}
     # return Response(status_code=status.HTTP_204_NO_CONTENT)
 
+#forgot password
 @router.post('/forgot_password')
 @staticmethod
 def forgot_password(background_tasks: BackgroundTasks,user: userschemas.ForgotPasswordSchema, db: Session= Depends(get_db)):
@@ -183,7 +184,7 @@ def forgot_password(background_tasks: BackgroundTasks,user: userschemas.ForgotPa
     return {"status": "success", "message": "forgot password code sent successfully"}
 
 
-
+#reset_password
 @router.post('/reset_password')
 def reset_password(user: userschemas.ResetPasswordSchema, db: Session = Depends(get_db)):
     user_to_reset = db.query(usermodel.Users).filter(usermodel.Users.verification_code == user.verification_code and usermodel.Users.email== user.email).first()
@@ -196,25 +197,6 @@ def reset_password(user: userschemas.ResetPasswordSchema, db: Session = Depends(
     db.commit()
 
     return {"status": "success", "message": "password reset successfully"}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
