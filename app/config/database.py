@@ -5,7 +5,7 @@ from ..config.config import settings
 
 # SQLITE_DATABASE_URL = "mysql://root:00000@127.0.0.1/fastapi"
 
-SQLITE_DATABASE_URL = f"mysql://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOSTNAME}/{settings.POSTGRES_DB}"
+SQLITE_DATABASE_URL = f"mysql+mysqlconnector://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOSTNAME}/{settings.POSTGRES_DB}"
 # engine = create_engine(
 #     SQLITE_DATABASE_URL, echo=True, connect_args={"check_same_thread": False}
 # )
