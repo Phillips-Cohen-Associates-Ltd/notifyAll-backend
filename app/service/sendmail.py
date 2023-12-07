@@ -26,7 +26,7 @@ async def send_email_async(subject: str, email_to: str, body: dict):
     )
     
     fm = FastMail(conf)
-    await fm.send_message(message, template_name='emailVerification.html')
+    await fm.send_message(message)
 
 def send_email_background(background_tasks: BackgroundTasks, subject: str, email_to: str, body: dict):
     message = MessageSchema(
@@ -37,26 +37,5 @@ def send_email_background(background_tasks: BackgroundTasks, subject: str, email
     )
     fm = FastMail(conf)
     background_tasks.add_task(
-       fm.send_message, message, template_name='emailVerification.html')
+       fm.send_message, message)
     
-async def send_email_async(subject: str, email_to: str, body: dict):
-    message = MessageSchema(
-        subject=subject,
-        recipients=[email_to],
-        body=body,
-        subtype='html',
-    )
-    
-    fm = FastMail(conf)
-    await fm.send_message(message, template_name='passwordverification.html')
-
-def send_email_background(background_tasks: BackgroundTasks, subject: str, email_to: str, body: dict):
-    message = MessageSchema(
-        subject=subject,
-        recipients=[email_to],
-        body=body,
-        subtype='html',
-    )
-    fm = FastMail(conf)
-    background_tasks.add_task(
-       fm.send_message, message, template_name='passwordverification.html')
