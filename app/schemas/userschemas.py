@@ -66,7 +66,3 @@ class ResetPasswordSchema(BaseModel):
     email: str
     verification_code: str = Field(..., min_length=6)
     new_password: str = Field(..., min_length=8)
-
-
-
-

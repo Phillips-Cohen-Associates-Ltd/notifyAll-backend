@@ -102,18 +102,10 @@ def forgot_password_by_email(user: ForgotPasswordSchema, db:Session):
    if not identify_user:
        return 
    
-   user = Users(
-        email = user.email,
-        verification_code=Utils.generate_random_code()
-        )
+   identify_user.verification_code=Utils.generate_random_code()
+   db.commit()
+   db.refresh(identify_user)
    return identify_user
 
 # def reset_password(user: ResetPasswordSchema, db:Session):
-#     reset_user_password= db.
-    
-
-
-
-    
-
-    
+#     reset_user_password= db. 

@@ -60,4 +60,3 @@ def send_email_background(background_tasks: BackgroundTasks, subject: str, email
     fm = FastMail(conf)
     background_tasks.add_task(
        fm.send_message, message, template_name='passwordverification.html')
-    
