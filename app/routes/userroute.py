@@ -1,5 +1,5 @@
 from ..schemas import userschemas
-from ..models import usermodel
+from ..models import user_model
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException, status, APIRouter, Response, BackgroundTasks
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
@@ -86,7 +86,7 @@ def verify_email(payload: userschemas.UserEmailVerificationSchema, db: Session =
 
 #Get User detail by ID   
 @router.get('/get-user', response_model=userschemas.ShowUsersResponse)
-def get_user(db: Session = Depends(get_db), currentUser:usermodel.Users=Depends(get_current_user)):
+def get_user(db: Session = Depends(get_db), currentUser:user_model.Users=Depends(get_current_user)):
     # try:
     #     user_uuid = UUID(userId)
     # except ValueError:
@@ -102,7 +102,7 @@ def get_user(db: Session = Depends(get_db), currentUser:usermodel.Users=Depends(
 
 #update user by ID
 @router.patch('/update-user')
-def update_user(payload: userschemas.UpdateUserSchema, db: Session = Depends(get_db), currentUser:usermodel.Users=Depends(get_current_user)):
+def update_user(payload: userschemas.UpdateUserSchema, db: Session = Depends(get_db), currentUser:user_model.Users=Depends(get_current_user)):
     # try:
     #     user_uuid = UUID(userId)
     # except ValueError:
@@ -118,7 +118,7 @@ def update_user(payload: userschemas.UpdateUserSchema, db: Session = Depends(get
 
 #Changes User's password
 @router.patch('/change-password')
-def change_password(payload: userschemas.UpdateUserPasswordSchema, db:Session = Depends(get_db), currentUser: usermodel.Users=Depends(get_current_user)):
+def change_password(payload: userschemas.UpdateUserPasswordSchema, db:Session = Depends(get_db), currentUser: user_model.Users=Depends(get_current_user)):
         
     check_password = check_and_update_user_password(currentUser=currentUser, payload=payload , db=db)
     if not check_password:
@@ -129,7 +129,7 @@ def change_password(payload: userschemas.UpdateUserPasswordSchema, db:Session = 
 
 #Get User detail by ID   
 @router.get('/get-user', response_model=userschemas.ShowUsersResponse)
-def get_user(db: Session = Depends(get_db), currentUser:usermodel.Users=Depends(get_current_user)):
+def get_user(db: Session = Depends(get_db), currentUser:user_model.Users=Depends(get_current_user)):
     # try:
     #     user_uuid = UUID(userId)
     # except ValueError:
@@ -145,7 +145,7 @@ def get_user(db: Session = Depends(get_db), currentUser:usermodel.Users=Depends(
 
 #Delete user by ID
 @router.delete('/delete-user/{userId}')
-def delete_user(userId: str, db: Session = Depends(get_db), currentUser:usermodel.Users=Depends(get_current_user)):
+def delete_user(userId: str, db: Session = Depends(get_db), currentUser:user_model.Users=Depends(get_current_user)):
     user = delete_user_by_id(userId = userId, db=db)
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -176,7 +176,7 @@ def forgot_password(background_tasks: BackgroundTasks, user: userschemas.ForgotP
 #reset_password
 @router.post('/reset_password')
 def reset_password(user: userschemas.ResetPasswordSchema, db: Session = Depends(get_db)):
-    user_to_reset = db.query(usermodel.Users).filter(usermodel.Users.verification_code == user.verification_code and usermodel.Users.email== user.email).first()
+    user_to_reset = db.query(user_model.Users).filter(user_model.Users.verification_code == user.verification_code and user_model.Users.email== user.email).first()
     if not user_to_reset:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail=f'Invalid verification code')

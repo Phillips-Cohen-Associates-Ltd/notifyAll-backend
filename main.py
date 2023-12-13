@@ -1,10 +1,10 @@
-from app.models import usermodel
-from app.routes import userroute, countriesroute
+from app.models import user_model
+from app.routes import commonroutes, userroute
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config.database import engine
 
-usermodel.Base.metadata.create_all(bind=engine)
+user_model.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -24,7 +24,7 @@ app.add_middleware(
 
 
 app.include_router(userroute.router, tags=['Users'], prefix='/api')
-app.include_router(countriesroute.router, tags=['Countries'], prefix='/api')
+app.include_router(commonroutes.router, tags=['Countries'], prefix='/api')
 # app.include_router(chatroute.router, tags=['Chat'], prefix='/chatbot')
 
 @app.get("/healthchecker")

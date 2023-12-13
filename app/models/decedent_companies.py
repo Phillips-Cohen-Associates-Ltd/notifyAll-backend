@@ -28,3 +28,17 @@ class DecedentCompanies(Base):
  account_type = Column(String(5), nullable=True)
  is_verified = Column(TINYINT, nullable=False, default=0, comment='0-Pending, 1-Verified')
  sf_id = Column(String(255), nullable=True)
+
+
+
+class DecedentLetterOfDirections(Base):
+ __tablename__ = 'decedent_letter_of_directions'
+
+ id = Column(String(36), primary_key=True)
+ request_id = Column(String(36), nullable=True)
+ recipient = Column(String(255), nullable=True)
+ contact_type = Column(String(255), nullable=True)
+ destination = Column(String(255), nullable=True)
+ subject = Column(String(255), nullable=True)
+ created_at = Column(TIMESTAMP, nullable=True)
+ updated_at = Column(TIMESTAMP, nullable=True)

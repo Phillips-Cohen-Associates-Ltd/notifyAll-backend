@@ -1,18 +1,18 @@
 from pydantic import BaseModel
 
-class Country(BaseModel):
+class Countries(BaseModel):
  name: str
  isoCode: str
  countryCode: str
  
 
-class State(BaseModel):
+class States(BaseModel):
  name: str
  isoCode: str
  countryCode: str
 
 
-class City(BaseModel):
+class Cities(BaseModel):
  name: str
  countryCode: str
  stateCode: str
