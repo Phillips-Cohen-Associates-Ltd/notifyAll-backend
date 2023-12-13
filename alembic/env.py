@@ -15,7 +15,8 @@ import sys
 
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
 from app.config.config import settings
-from app.models.usermodel import Base
+from app.models import decedent_request_document_draft_model, usermodel, creditor_property_utility_details_model, creditor_property_utility_model, creditor_property_utility_draft_model, creditor_service_utility_draft_model, creditor_service_utility_model,creditor_transfer_details_model,decedent_companies_model,decedent_letter_of_direction_draft_model,decedent_membership_account_draft_model,decedent_membership_accounts_model, decedent_new_creditors_draft_models,decedent_new_creditors_models, decedent_request_creditors_draft_model,decedent_request_creditors_models,decedent_requests_model, decedent_request_document_model,decedent_requests_draft_model, creditor_property_utility_details_draft_model,countries_state_citymodel
+from app.config.database import Base
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -79,8 +80,8 @@ def run_migrations_online() -> None:
     """
     connectable = engine_from_config(
         config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
+        prefix="sqlalchemy."
+        # poolclass=pool.NullPool,
     )
 
     with connectable.connect() as connection:
