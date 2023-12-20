@@ -1,17 +1,18 @@
 from ..schemas import userschemas
-from ..models import usermodel
+from ..models import user_model
 from sqlalchemy.orm import Session
 from fastapi import Depends, HTTPException, status, APIRouter, Response, BackgroundTasks
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from ..config.database import get_db
 from ..repository.user import create_new_user, get_user_by_id, delete_user_by_id, update_user_by_id, check_and_update_user_password, authenticate_user, get_user_by_email, email_verification, forgot_password_by_email
-from uuid import UUID 
+from uuid import UUID
 from ..service.jwt import create_access_token
 from ..service.sendmail import send_email_background
 from ..service.hashing import Hasher
 from jose import JWTError, jwt
 from ..config.config import settings
 from jinja2 import Environment, FileSystemLoader
+from ..service.utils import Utils
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/user-login")
@@ -72,14 +73,7 @@ def create_user(background_tasks: BackgroundTasks, user:userschemas.RegisterUser
     }
     # body_json = json.dumps(body_data)
     # Load the template
-    env = Environment(loader=FileSystemLoader('/home/kishorerayan12/notifyAll-backend/app/templates'))
-    template = env.get_template('emailVerification.html')
-
-    # Render the template with the dictionary
-    html_output = template.render(body_data)
-
-    send_email_background(background_tasks, f'Registration E-mail Verification', f'{new_user.email}', html_output)
-    return {"status": "success", "message": "User registered successfully"}
+    return Utils.user_registration_authentication(background_tasks=background_tasks, email= new_user.email, body_data= body_data)
 
 @router.post('/verify-email')
 def verify_email(payload: userschemas.UserEmailVerificationSchema, db: Session = Depends(get_db)):
@@ -92,7 +86,7 @@ def verify_email(payload: userschemas.UserEmailVerificationSchema, db: Session =
 
 #Get User detail by ID   
 @router.get('/get-user', response_model=userschemas.ShowUsersResponse)
-def get_user(db: Session = Depends(get_db), currentUser:usermodel.Users=Depends(get_current_user)):
+def get_user(db: Session = Depends(get_db), currentUser:user_model.Users=Depends(get_current_user)):
     # try:
     #     user_uuid = UUID(userId)
     # except ValueError:
@@ -108,7 +102,7 @@ def get_user(db: Session = Depends(get_db), currentUser:usermodel.Users=Depends(
 
 #update user by ID
 @router.patch('/update-user')
-def update_user(payload: userschemas.UpdateUserSchema, db: Session = Depends(get_db), currentUser:usermodel.Users=Depends(get_current_user)):
+def update_user(payload: userschemas.UpdateUserSchema, db: Session = Depends(get_db), currentUser:user_model.Users=Depends(get_current_user)):
     # try:
     #     user_uuid = UUID(userId)
     # except ValueError:
@@ -124,7 +118,7 @@ def update_user(payload: userschemas.UpdateUserSchema, db: Session = Depends(get
 
 #Changes User's password
 @router.patch('/change-password')
-def change_password(payload: userschemas.UpdateUserPasswordSchema, db:Session = Depends(get_db), currentUser: usermodel.Users=Depends(get_current_user)):
+def change_password(payload: userschemas.UpdateUserPasswordSchema, db:Session = Depends(get_db), currentUser: user_model.Users=Depends(get_current_user)):
         
     check_password = check_and_update_user_password(currentUser=currentUser, payload=payload , db=db)
     if not check_password:
@@ -135,7 +129,7 @@ def change_password(payload: userschemas.UpdateUserPasswordSchema, db:Session = 
 
 #Get User detail by ID   
 @router.get('/get-user', response_model=userschemas.ShowUsersResponse)
-def get_user(db: Session = Depends(get_db), currentUser:usermodel.Users=Depends(get_current_user)):
+def get_user(db: Session = Depends(get_db), currentUser:user_model.Users=Depends(get_current_user)):
     # try:
     #     user_uuid = UUID(userId)
     # except ValueError:
@@ -144,14 +138,14 @@ def get_user(db: Session = Depends(get_db), currentUser:usermodel.Users=Depends(
     user = get_user_by_id(userId = currentUser.id, db=db)
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f"No user with this id: {userId} found")
+                            detail=f"No user with this id: {user} found")
     # return {"status": "success", "users": user}
     return user
 
 
 #Delete user by ID
 @router.delete('/delete-user/{userId}')
-def delete_user(userId: str, db: Session = Depends(get_db), currentUser:usermodel.Users=Depends(get_current_user)):
+def delete_user(userId: str, db: Session = Depends(get_db), currentUser:user_model.Users=Depends(get_current_user)):
     user = delete_user_by_id(userId = userId, db=db)
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -163,7 +157,7 @@ def delete_user(userId: str, db: Session = Depends(get_db), currentUser:usermode
 #forgot password
 @router.post('/forgot_password')
 @staticmethod
-def forgot_password(background_tasks: BackgroundTasks,user: userschemas.ForgotPasswordSchema, db: Session= Depends(get_db)):
+def forgot_password(background_tasks: BackgroundTasks, user: userschemas.ForgotPasswordSchema, db: Session= Depends(get_db)):
     update_password= forgot_password_by_email(user=user, db=db)
     if not update_password:
          raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
@@ -173,21 +167,16 @@ def forgot_password(background_tasks: BackgroundTasks,user: userschemas.ForgotPa
     "name": f"{update_password.name}",
     "description": f"Your verification code is {update_password.verification_code}"
     }
+    
     # body_json = json.dumps(body_data)
     # Load the template
-    env = Environment(loader=FileSystemLoader('/home/kishorerayan12/notifyAll-backend/app/templates'))
-    template = env.get_template('passwordverification.html')
-
-    html_output = template.render(body_data)
-
-    send_email_background(background_tasks, f'Forgot Password Verification', f'{update_password.email}', html_output)
-    return {"status": "success", "message": "forgot password code sent successfully"}
+    return Utils.forgot_password_authentication(background_tasks= background_tasks,email=update_password.email,body_data=body_data)
 
 
 #reset_password
 @router.post('/reset_password')
 def reset_password(user: userschemas.ResetPasswordSchema, db: Session = Depends(get_db)):
-    user_to_reset = db.query(usermodel.Users).filter(usermodel.Users.verification_code == user.verification_code and usermodel.Users.email== user.email).first()
+    user_to_reset = db.query(user_model.Users).filter(user_model.Users.verification_code == user.verification_code and user_model.Users.email== user.email).first()
     if not user_to_reset:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail=f'Invalid verification code')

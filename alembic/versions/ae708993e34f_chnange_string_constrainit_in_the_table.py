@@ -1,8 +1,8 @@
-"""empty message
+"""chnange string constrainit in the table
 
-Revision ID: 74fffd3a78e6
-Revises: 
-Create Date: 2023-10-09 09:43:10.291176
+Revision ID: ae708993e34f
+Revises: 55786cd0895a
+Create Date: 2023-12-13 17:28:46.716518
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '74fffd3a78e6'
-down_revision: Union[str, None] = None
+revision: str = 'ae708993e34f'
+down_revision: Union[str, None] = '55786cd0895a'
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

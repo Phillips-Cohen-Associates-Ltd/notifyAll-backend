@@ -1,9 +1,13 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import and_
+from fastapi import Depends
 from ..schemas.userschemas import UsersBaseSchema, RegisterUsersSchema, UpdateUserSchema, UpdateUserPasswordSchema, UserEmailVerificationSchema, ForgotPasswordSchema, ResetPasswordSchema
-from ..models.usermodel import Users
+from ..models.user_model import Users
+from ..models.countries_state_citymodel import Country
+from ..config.database import get_db
 from ..service.hashing import Hasher
 from..service.utils import Utils
+import pycountry
 
 
 def create_new_user(user:RegisterUsersSchema,db:Session):
@@ -102,18 +106,7 @@ def forgot_password_by_email(user: ForgotPasswordSchema, db:Session):
    if not identify_user:
        return 
    
-   user = Users(
-        email = user.email,
-        verification_code=Utils.generate_random_code()
-        )
+   identify_user.verification_code=Utils.generate_random_code()
+   db.commit()
+   db.refresh(identify_user)
    return identify_user
-
-# def reset_password(user: ResetPasswordSchema, db:Session):
-#     reset_user_password= db.
-    
-
-
-
-    
-
-    
