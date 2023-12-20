@@ -15,7 +15,7 @@ import sys
 
 sys.path.insert(0, dirname(dirname(abspath(__file__))))
 from app.config.config import settings
-from app.models import user_model,requests_model,new_creditors_models,membership_accounts_model,decedent_companies,creditor_service_model,creditor_property_model,countries_state_citymodel
+from app.models import identification_model, user_model,requests_model,new_creditors_models,membership_accounts_model,decedent_companies,creditor_service_model,creditor_property_model,countries_state_citymodel, relationship_model
 from app.config.database import Base
 
 # this is the Alembic Config object, which provides

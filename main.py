@@ -1,5 +1,5 @@
 from app.models import user_model
-from app.routes import commonroutes, userroute
+from app.routes import commonroutes, userroute, notifierroutes
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config.database import engine
@@ -25,6 +25,8 @@ app.add_middleware(
 
 app.include_router(userroute.router, tags=['Users'], prefix='/api')
 app.include_router(commonroutes.router, tags=['Countries'], prefix='/api')
+app.include_router(notifierroutes.router, tags=['NotifierInformation'], prefix='/api')
+
 # app.include_router(chatroute.router, tags=['Chat'], prefix='/chatbot')
 
 @app.get("/healthchecker")

@@ -19,8 +19,7 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    op.alter_column('cities', 'name', existing_type=sa.String(100), type_=sa.String(250))
-
+    pass
 
 
 def downgrade() -> None:

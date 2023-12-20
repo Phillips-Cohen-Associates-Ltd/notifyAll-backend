@@ -11,8 +11,8 @@ class UsersBaseSchema(BaseModel):
     is_approved: bool = False
     is_email_verified: bool = False
     verification_code: str | None = None
-    createdAt: datetime | None = None
-    updatedAt: datetime | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
 
     class Config:
         from_attributes = True

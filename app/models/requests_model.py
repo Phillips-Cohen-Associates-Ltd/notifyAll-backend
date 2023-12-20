@@ -1,13 +1,15 @@
 from sqlalchemy import Column, String, Integer, Boolean, Date, Text, BigInteger, ForeignKey, TIMESTAMP, DateTime, PrimaryKeyConstraint
 from sqlalchemy.dialects.mysql import CHAR, VARCHAR, TINYINT, LONGTEXT
 from sqlalchemy.sql import func
+from uuid import uuid4
 from ..config.database import Base
+from fastapi_utils.guid_type import GUID, GUID_DEFAULT_SQLITE
+
 
 
 class DecedentRequest(Base):
    __tablename__ = 'decedent_requests'
-
-   id = Column(String(36), primary_key=True)
+   id = Column(String(36), primary_key=True, default=str(uuid4()))
    user_id = Column(String(36), nullable=True)
    funeral_home_id = Column(String(36), nullable=True)
    notifier_salutation = Column(String(5), nullable=True)
@@ -17,6 +19,8 @@ class DecedentRequest(Base):
    address = Column(Text, nullable=True)
    address_two = Column(Text, nullable=True)
    email = Column(String(50), nullable=True)
+   apartment= Column(String(50))
+
    phone_number = Column(String(20), nullable=True)
    relationship = Column(String(40), nullable=False)
    person_dealing_with_estate = Column(TINYINT(1), nullable=False)
@@ -24,11 +28,12 @@ class DecedentRequest(Base):
    person_dealing_phone_number = Column(String(20), nullable=True)
    probate_applied = Column(TINYINT(1), nullable=False)
    is_there_is_will = Column(TINYINT(1), nullable=False, server_default='1')
-   available_for_contact = Column(TINYINT(1), nullable=False)
    email_available_for_contact = Column(TINYINT(1), nullable=True)
    phone_number_available_for_contact = Column(TINYINT(1), nullable=True)
    mail_available_for_contact = Column(TINYINT(1), nullable=True)
    is_verify_identity = Column(String(5), nullable=False)
+   # Identity_type= Column(String(40))
+   # Identity_number= Column(Integer)
    deceased_salutation = Column(String(5), nullable=True)
    first_name_of_departed = Column(String(50), nullable=True)
    middle_name_of_departed = Column(String(50), nullable=True)
@@ -55,8 +60,8 @@ class DecedentRequest(Base):
    reg_year = Column(String(50), nullable=True)
    ssn_number = Column(LONGTEXT, nullable=True)
    status = Column(BigInteger, nullable=False, server_default='1')
-   created_at = Column(TIMESTAMP, nullable=True)
-   updated_at = Column(TIMESTAMP, nullable=True)
+   created_at =Column(TIMESTAMP(timezone=True),nullable=False, server_default=func.now())
+   updated_at = Column(TIMESTAMP(timezone=True),default=None, onupdate=func.now())
    country_code = Column(String(5), nullable=False)
    phone_flag_code = Column(String(5), nullable=True)
    person_dealing_country_code = Column(String(5), nullable=True)
@@ -64,7 +69,6 @@ class DecedentRequest(Base):
    request_id = Column(String(50), nullable=True)
    identification_id = Column(String(36), nullable=False)
    id_number = Column(String(30), nullable=False)
-   level = Column(TINYINT, nullable=False)
    import_by = Column(String(36), nullable=True)
    cause_of_death_others = Column(String(50), nullable=True)
    certificate_others = Column(String(50), nullable=True)
@@ -115,11 +119,7 @@ class DecedentRequest(Base):
    signature = Column(Text, nullable=True)
    request_status = Column(BigInteger, nullable=False, server_default='1')
    sf_id = Column(String(255), nullable=True)
-   createdAt = Column(TIMESTAMP(timezone=True),
-                       nullable=False, server_default=func.now())
-   updatedAt = Column(TIMESTAMP(timezone=True),
-                       default=None, onupdate=func.now())
-
+   
 class DecedentRequestsDraft(Base):
    __tablename__ = 'decedent_requests_draft'
    

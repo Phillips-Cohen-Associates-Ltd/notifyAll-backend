@@ -19,7 +19,7 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-       op.create_primary_key('cities_pkey', 'cities', ['name'])
-
-def downgrade() -> None:
     pass
+def downgrade() -> None:
+     op.drop_column('decedent_requests', 'available_for_contact')
+     op.drop_column('decedent_requests', 'level')
