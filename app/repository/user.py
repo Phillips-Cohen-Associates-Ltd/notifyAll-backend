@@ -3,7 +3,6 @@ from sqlalchemy import and_
 from fastapi import Depends
 from ..schemas.userschemas import UsersBaseSchema, RegisterUsersSchema, UpdateUserSchema, UpdateUserPasswordSchema, UserEmailVerificationSchema, ForgotPasswordSchema, ResetPasswordSchema
 from ..models.user_model import Users
-from ..models.countries_state_citymodel import Country
 from ..config.database import get_db
 from ..service.hashing import Hasher
 from..service.utils import Utils

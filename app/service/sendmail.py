@@ -13,7 +13,7 @@ conf = ConnectionConfig(
     MAIL_STARTTLS=True,
     MAIL_SSL_TLS=False,
     USE_CREDENTIALS=True,
-    TEMPLATE_FOLDER=f'/home/kishorerayan12/notifyAll-backend/app/templates'
+    TEMPLATE_FOLDER=settings.TEMPLATE_FOLDER
 )
 
 

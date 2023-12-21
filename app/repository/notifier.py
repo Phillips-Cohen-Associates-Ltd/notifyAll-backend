@@ -1,11 +1,15 @@
 from ..schemas.notifierinformationschemas import NotifierRegistrationschema, DecedentRegistrationschema, CreateIdentificationSchemas, EditIdentificationSchema, RelationshipBaseSchema, CreateRelationshipSchemas, EditRelationshipSchema
 from sqlalchemy.orm import Session
 from ..models.requests_model import DecedentRequest
+from app.schemas.countriesapi import Countries,States,CountriesStates, Cities
+from ..models.country_state_city_model import Country, State, City
+from typing import List
+from sqlalchemy.exc import SQLAlchemyError
 from ..models.identification_model import Identification
 from ..models.relationship_model import Relationships
 from fastapi import HTTPException, status
 from sqlalchemy import update
-
+import requests
 
 
 def create_new_notifier(notifier: NotifierRegistrationschema, db:Session):
@@ -120,4 +124,39 @@ def delete_relationship_by_id(id:str, db:Session):
     db.commit()
     return 1
 
+def get_countries_states_cities(db: Session):
+#  file_path = '/home/kishorerayan12/countries+states+cities.json'
+
+#  with open(file_path, 'r') as f:
+#    data = json.load(f)
+ response = requests.get('https://raw.githubusercontent.com/dr5hn/countries-states-cities-database/master/countries%2Bstates%2Bcities.json')
+ data = response.json()
+
+ countries= []
+ for country_data in data:
+   country_obj = Country(id=country_data['id'], name=country_data['name'], countryCode=country_data['iso3'])
+   existing_country = db.query(Country).filter(Country.id == country_data['id']).first()
+   if not existing_country:
+     db.add(country_obj)
+     db.commit()
+   states=[]
+   for state_data in country_data['states']: #loop through each state in the country
+     state_obj = State(id=state_data['id'], name=state_data['name'], stateCode=state_data['state_code'], country_id=country_obj.id)
+     print("********************",state_obj)
+     existing_state = db.query(State).filter(State.id == state_data['id']).first()
+     if not existing_state:
+       db.add(state_obj)
+       db.commit()
+     states.append(state_obj)
+     cities=[]
+     for city_data in state_data['cities']: # Loop through each city in the state
+          city_obj = City(id=city_data['id'], name=city_data['name'], state_id=state_obj.id)
+          existing_city= db.query(City).filter(City.id==city_data['id']).first()
+          if not existing_city:
+            db.add(city_obj)
+            db.commit()
+          cities.append(city_obj)
+      
+   countries.append(CountriesStates(country=Countries(id= country_obj.id, name= country_obj.name, countryCode= country_obj.countryCode), states=[States(id=state_obj.id, name=state_obj.name, country_id=country_obj.id, stateCode=state_obj.stateCode, cities= [Cities(id=city_obj.id,name=city_obj.name, state_id=state_obj.id) for city in cities])  for state in states]))
+ return countries
  

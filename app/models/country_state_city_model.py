@@ -1,12 +1,12 @@
-from sqlalchemy import Column, String, TIMESTAMP
+from sqlalchemy import Column, String, TIMESTAMP,Integer, ForeignKey
 from ..config.database import Base
 from sqlalchemy.sql import func
 
 
 class Country(Base):
-   __tablename__ = 'countries'
+   __tablename__ = 'country'
+   id= Column(Integer, primary_key=True)
    name = Column(String(100))
-   isoCode = Column(String(100))
    countryCode = Column(String(100), primary_key=True)
    created_at = Column(TIMESTAMP(timezone=True),
                        nullable=False, server_default=func.now())
@@ -14,21 +14,23 @@ class Country(Base):
                        default=None, onupdate=func.now())
 
 class State(Base):
-   __tablename__ = 'states'
-   name = Column(String(255), primary_key=True)
-   isoCode = Column(String(100))
-   countryCode = Column(String(100))
+   __tablename__ = 'state'
+   id= Column(Integer, primary_key=True)
+   name = Column(String(255))
+   country_id = Column(Integer, ForeignKey('country.id'))
+   stateCode = Column(String(100))
    created_at = Column(TIMESTAMP(timezone=True),
                        nullable=False, server_default=func.now())
    updated_at = Column(TIMESTAMP(timezone=True),
                        default=None, onupdate=func.now())
 
+
 class City(Base):
-   __tablename__ = 'cities'
+   __tablename__ = 'city'
+   id= Column(Integer, primary_key=True)
    name = Column(String(255))
-   countryCode = Column(String(100))
-   stateCode = Column(String(100), primary_key=True)
+   state_id= Column(Integer, ForeignKey('state.id'))
    created_at = Column(TIMESTAMP(timezone=True),
                        nullable=False, server_default=func.now())
-   updated_at= Column(TIMESTAMP(timezone=True),
-                       default=None, onupdate=func.now())
+   updated_at = Column(TIMESTAMP(timezone=True),
+                       default=None, onupdate=func.now())   
