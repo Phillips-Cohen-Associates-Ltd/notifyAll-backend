@@ -1,18 +1,25 @@
 from pydantic import BaseModel
+from typing import List
 
 class Countries(BaseModel):
- name: str
- isoCode: str
- countryCode: str
- 
-
-class States(BaseModel):
- name: str
- isoCode: str
- countryCode: str
-
+  id: int
+  name: str
+  countryCode: str
 
 class Cities(BaseModel):
- name: str
- countryCode: str
- stateCode: str
+   id: int
+   name: str
+   state_id: int
+
+class States(BaseModel):
+    id: int
+    name: str
+    country_id: int
+    stateCode: str
+    cities: List[Cities]
+
+
+
+class CountriesStates(BaseModel):
+  country: Countries
+  states: list[States]
