@@ -17,6 +17,8 @@ class Settings(BaseSettings):
     MAIL_PORT: int
     MAIL_SERVER: str
     MAIL_FROM_NAME: str
+    TEMPLATE_FOLDER: str
+    COUNTRIES_API: str
 
     class Config:
         env_file = './.env'
