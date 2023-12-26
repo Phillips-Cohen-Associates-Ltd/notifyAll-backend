@@ -3,6 +3,7 @@ from ..schemas.notifierinformationschemas import NotifierRegistrationschema, Dec
 from sqlalchemy.orm import Session
 from ..repository.notifier import create_new_notifier, create_new_decedent, create_new_identification, edit_identification_by_id, delete_identification_by_id, create_new_relationship, edit_relationship_by_id, delete_relationship_by_id
 from ..config.database import get_db
+import json, os, shutil
 
 router= APIRouter()
 
@@ -86,7 +87,3 @@ def delete_relationship(id:str, db:Session= Depends(get_db)):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                             detail=f'ID already exists')
     return "Identification Id deleted successfully"
-
-@router.post("/uploadfile/")
-async def create_upload_file(file: UploadFile = File(...)):
-   return {"filename": file.filename}
