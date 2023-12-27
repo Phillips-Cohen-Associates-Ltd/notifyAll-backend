@@ -1,0 +1,13 @@
+fastapi==0.108.0
+fastapi_mail==1.4.1
+fastapi_utils==0.2.1
+Jinja2==3.1.2
+passlib==1.7.4
+pycountry==23.12.11
+pydantic==2.5.3
+pydantic_settings==2.1.0
+python_jose==3.3.0
+Requests==2.31.0
+SQLAlchemy==2.0.12
+mysql-connector-python==8.2.0
+mysqlclient==2.2.0
