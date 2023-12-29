@@ -13,3 +13,6 @@ app/service/__pycache__
 app/repository/__pycache__
 alembic/__pycache__
 alembic/versions/__pycache__
+/home/kishorerayan12/notifyAll-backend/test.py
+/home/kishorerayan12/notifyAll-backend/app/repository/uploads
+/home/kishorerayan12/notifyAll-backend/app/assets/uploads/notifier_request

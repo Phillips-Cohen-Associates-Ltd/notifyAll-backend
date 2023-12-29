@@ -168,20 +168,77 @@ async def get_countries_states_cities(db: Session):
   return countries
 
 
+# async def upload_and_download_file(
+#  db: Session,
+#  request_id: str = Form(...),
+#  status: Status = Form(...),
+#  files: List[UploadFile] = File(...)
+# ):
+#  uploaded_files = []
+
+#  for file in files:
+#    file_extension = mimetypes.guess_extension(file.content_type)
+#    if file_extension not in ['.jpeg', '.jpg', '.pdf', '.png', '.doc', '.docx']:
+#       raise HTTPException(status_code=400, detail="Invalid file type. Only PDFs and image files are allowed.")
+
+#    check_id = db.query(DecedentRequestDocument).filter(DecedentRequest.id == request_id).first()
+#    if not check_id:
+#       return f"The id doesn't match {request_id}"
+
+#    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+#    UPLOAD_DIR = os.path.join(BASE_DIR, settings.UPLOAD_DIR)
+#    os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+#    DOWNLOAD_DIR = settings.DOWNLOAD_DIR
+#    REQUEST_DIR = os.path.join(DOWNLOAD_DIR, request_id)
+
+#    file_location = os.path.join(UPLOAD_DIR, file.filename)
+#    os.makedirs(os.path.dirname(file_location), exist_ok=True)
+
+#    with open(file_location, "wb") as buffer:
+#       contents = await file.read()
+#       buffer.write(contents)
+
+#    download_path = os.path.join(REQUEST_DIR,file.filename)
+#    os.makedirs(os.path.dirname(download_path), exist_ok=True)
+
+#    with open(file_location, "rb") as source, open(download_path, "wb") as destination:
+#       destination.write(source.read())
+
+#    file_size = os.path.getsize(download_path)
+
+#    # Create a new DecedentRequestDocument instance for each file
+#    decedent_proof = DecedentRequestDocument(
+#     id= str(uuid4()),
+#     request_id=request_id,
+#     document=download_path,
+#     status= int(status.value),
+#     size= file_size
+#    )
+
+#    # Save decedent_proof to the database
+#    db.add(decedent_proof)
+#    db.commit()
+#    uploaded_files.append(file.filename)
+#  return {"message": "Files uploaded successfully", "uploaded_files": uploaded_files}
+# #  return FileResponse(path=download_path, media_type='application/octet-stream', filename=file.filename)
 async def upload_and_download_file(
  db: Session,
  request_id: str = Form(...),
  status: Status = Form(...),
  files: List[UploadFile] = File(...)
 ):
+ uploaded_files = []
+ valid_files = True # Flag to track if all files are valid
+
  for file in files:
    file_extension = mimetypes.guess_extension(file.content_type)
-   if file_extension  in ['jpeg', 'jpg', 'pdf', 'png', 'doc', 'docx']:
-      raise HTTPException(status_code=400, detail="Invalid file type. Only PDFs and image files are allowed.")
-
+   if file_extension not in ['.jpeg', '.jpg', '.pdf', '.png', '.doc', '.docx']:
+      valid_files = False # Set flag to False if a file fails the condition
+      break
    check_id = db.query(DecedentRequestDocument).filter(DecedentRequest.id == request_id).first()
    if not check_id:
-      return f"The id doesn't match {request_id}"
+     return f"The id doesn't match {request_id}"
 
    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
    UPLOAD_DIR = os.path.join(BASE_DIR, settings.UPLOAD_DIR)
@@ -194,26 +251,37 @@ async def upload_and_download_file(
    os.makedirs(os.path.dirname(file_location), exist_ok=True)
 
    with open(file_location, "wb") as buffer:
-      contents = await file.read()
-      buffer.write(contents)
+     contents = await file.read()
+     buffer.write(contents)
 
-   download_path = os.path.join(REQUEST_DIR, file.filename)
+   download_path = os.path.join(REQUEST_DIR,file.filename)
    os.makedirs(os.path.dirname(download_path), exist_ok=True)
 
    with open(file_location, "rb") as source, open(download_path, "wb") as destination:
-      destination.write(source.read())
+     destination.write(source.read())
 
    file_size = os.path.getsize(download_path)
 
-   # Create a new DecedentRequestDocument instance for each file
+ # Create a new DecedentRequestDocument instance for each file
    decedent_proof = DecedentRequestDocument(
-    request_id=request_id,
-    document=download_path,
-    status= int(status.value),
-    size= file_size
-   )
+ id= str(uuid4()),
+ request_id=request_id,
+ document=download_path,
+ status= int(status.value),
+ size= file_size
+ )
 
-   # Save decedent_proof to the database
+ # Add decedent_proof to the session but don't commit yet
    db.add(decedent_proof)
-   db.commit()
-   return FileResponse(path=download_path, media_type='application/octet-stream', filename=file.filename)
+
+   uploaded_files.append(file.filename)
+
+ # If any file failed the condition, rollback the session and return an error message
+ if not valid_files:
+   db.rollback()
+   return {"error": "Some files have invalid extensions."}
+
+ # Otherwise, commit the changes to the database
+ db.commit()
+
+ return {"message": "Files uploaded successfully", "uploaded_files": uploaded_files}
