@@ -27,7 +27,7 @@ def test_root():
 def test_create_user():
     data = {
         "name": "kishore",
-        "email": "kishore176443@gmail.com",
+        "email": "kishore17556443@gmail.com",
         "password": "kishore456",
     }
     response = client.post("/api/register-user/", json=data)

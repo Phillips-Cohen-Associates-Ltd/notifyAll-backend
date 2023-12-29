@@ -6,7 +6,7 @@ from ..models.user_model import Users
 from ..config.database import get_db
 from ..service.hashing import Hasher
 from..service.utils import Utils
-import pycountry
+import binascii
 
 
 def create_new_user(user:RegisterUsersSchema,db:Session):
@@ -75,8 +75,7 @@ def check_and_update_user_password(currentUser:UsersBaseSchema, payload: UpdateU
 
 def delete_user_by_id(userId: str, db:Session):
     user = db.query(Users).filter(Users.id == userId)
-    user_data = user.first()
-    if not user_data:
+    if not user:
         return
     
     user.delete(synchronize_session=False)

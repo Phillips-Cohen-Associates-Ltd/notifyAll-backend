@@ -19,7 +19,8 @@ class Settings(BaseSettings):
     MAIL_FROM_NAME: str
     TEMPLATE_FOLDER: str
     COUNTRIES_API: str
-
+    DOWNLOAD_DIR: str
+    UPLOAD_DIR: str
     class Config:
         env_file = './.env'
         env_file_encoding = 'utf-8'

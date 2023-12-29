@@ -144,12 +144,12 @@ def get_user(db: Session = Depends(get_db), currentUser:user_model.Users=Depends
 
 
 #Delete user by ID
-@router.delete('/delete-user/{userId}')
+@router.delete('/delete-user/')
 def delete_user(userId: str, db: Session = Depends(get_db), currentUser:user_model.Users=Depends(get_current_user)):
-    user = delete_user_by_id(userId = userId, db=db)
+    user = delete_user_by_id(userId = currentUser.id, db=db)
     if not user:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                            detail=f'No user with this id: {userId} found')
+                            detail=f'No user with this id: found')
     
     return {"msg":f"Successfully deleted user with id {userId}"}
     # return Response(status_code=status.HTTP_204_NO_CONTENT)
