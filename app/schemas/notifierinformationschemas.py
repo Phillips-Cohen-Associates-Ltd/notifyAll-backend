@@ -31,11 +31,14 @@ class Certificate_id(str,Enum):
        Funeral_home_certificate= "Funeral Home Certificate"
        Medical_Report= "Medical Report"
 
+class Status(int,Enum):
+     success= 1
+     Failed= 0
 
 
 class NotifierRegistrationschema(BaseModel):
         # id: str
-        user_id: str
+        # user_id: str
         name: str
         country: int
         address: str
@@ -152,6 +155,9 @@ class EditRelationshipSchema(BaseModel):
     name: str
     id: str
 
+class FileUploadSchema(BaseModel):
+    request_id: str  
+    status: int
 
 
 
