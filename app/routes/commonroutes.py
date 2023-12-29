@@ -15,6 +15,6 @@ file_path = '/home/kishorerayan12/countries+states+cities.json'
 router= APIRouter()
 
 @router.get("/countries", response_model=list[CountriesStates])
-def get_all_countries_states_cities(db:Session= Depends(get_db)):
-   get_countries= get_countries_states_cities(db=db)
+async def get_all_countries_states_cities(db:Session= Depends(get_db)):
+   get_countries= await get_countries_states_cities(db=db)
    return get_countries

@@ -1,0 +1,129 @@
+{
+    "Country": [
+        {
+            "id": 1,
+            "name": "United States",
+            "countryCode": "USA",
+            "states": [
+                {
+                  "id": 1,
+                  "name": "California",
+                  "country_id": 1,
+                  "cities": [
+                      {
+                          "id": 1,
+                          "name": "Los Angeles",
+                          "state_id": 1
+                      },
+                      {
+                          "id": 2,
+                          "name": "San Francisco",
+                          "state_id": 1
+                      }
+                  ]
+                },
+                {
+                  "id": 2,
+                  "name": "Texas",
+                  "country_id": 1,
+                  "cities": [
+                      {
+                          "id": 3,
+                          "name": "Houston",
+                          "state_id": 2
+                      },
+                      {
+                          "id": 4,
+                          "name": "Austin",
+                          "state_id": 2
+                      }
+                  ]
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "India",
+            "countryCode": "IND",
+            "states": [
+                {
+                  "id": 3,
+                  "name": "Karnataka",
+                  "country_id": 2,
+                  "cities": [
+                      {
+                          "id": 5,
+                          "name": "Bangalore",
+                          "state_id": 3
+                      },
+                      {
+                          "id": 6,
+                          "name": "Mysuru",
+                          "state_id": 3
+                      }
+                  ]
+                },
+                {
+                  "id": 4,
+                  "name": "Maharashtra",
+                  "country_id": 2,
+                  "cities": [
+                      {
+                          "id": 7,
+                          "name": "Mumbai",
+                          "state_id": 4
+                      },
+                      {
+                          "id": 8,
+                          "name": "Pune",
+                          "state_id": 4
+                      }
+                  ]
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "name": "India",
+            "countryCode": "IND",
+            "states": [
+                {
+                  "id": 3,
+                  "name": "Karnataka",
+                  "country_id": 2,
+                  "cities": [
+                      {
+                          "id": 5,
+                          "name": "Bangalore",
+                          "state_id": 3
+                      },
+                      {
+                          "id": 6,
+                          "name": "Mysuru",
+                          "state_id": 3
+                      }
+                  ]
+                },
+                {
+                  "id": 4,
+                  "name": "Maharashtra",
+                  "country_id": 2,
+                  "cities": [
+                      {
+                          "id": 7,
+                          "name": "Mumbai",
+                          "state_id": 4
+                      },
+                      {
+                          "id": 8,
+                          "name": "Pune",
+                          "state_id": 4
+                      }
+                  ]
+                }
+            ]
+        }
+    ]
+  }
+
+ 

@@ -224,12 +224,14 @@ class DecedentRequestsDraft(Base):
 class DecedentRequestDocument(Base):
     __tablename__ = "decedent_request_document"
 
-    id = Column(String(36), primary_key=True)
-    request_id = Column(String(36), nullable=False)
+    id = Column(String(36), primary_key=True, default=str(uuid4()))
+    request_id = Column(String(36), ForeignKey("decedent_requests.id"), nullable=False)
     document = Column(String(255), nullable=False)
     status = Column(Integer, nullable=False, default=1)
-    created_at = Column(TIMESTAMP, nullable=True)
-    updated_at = Column(TIMESTAMP, nullable=True)
+    created_at = Column(TIMESTAMP(timezone=True),
+                       nullable=False, server_default=func.now())
+    updated_at = Column(TIMESTAMP(timezone=True),
+                       default=None, onupdate=func.now())
     size = Column(String(255), nullable=True)
 
     __table_args__ = (
