@@ -186,25 +186,15 @@ async def upload_and_download_file(
    if not check_id:
      return f"The id doesn't match {request_id}"
 
-   BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-   UPLOAD_DIR = os.path.join(BASE_DIR, settings.UPLOAD_DIR)
-   os.makedirs(UPLOAD_DIR, exist_ok=True)
-
    DOWNLOAD_DIR = settings.DOWNLOAD_DIR
    REQUEST_DIR = os.path.join(DOWNLOAD_DIR, request_id)
-
-   file_location = os.path.join(UPLOAD_DIR, file.filename)
-   os.makedirs(os.path.dirname(file_location), exist_ok=True)
-
-   with open(file_location, "wb") as buffer:
-     contents = await file.read()
-     buffer.write(contents)
 
    download_path = os.path.join(REQUEST_DIR,file.filename)
    os.makedirs(os.path.dirname(download_path), exist_ok=True)
 
-   with open(file_location, "rb") as source, open(download_path, "wb") as destination:
-     destination.write(source.read())
+   with open(download_path, "wb") as destination:
+       contents = await file.read()
+       destination.write(contents)
 
    file_size = os.path.getsize(download_path)
 
