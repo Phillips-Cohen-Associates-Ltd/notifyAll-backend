@@ -1,18 +1,29 @@
-from app.models import user_model
+# from app.models import user_model
 from app.routes import commonroutes, userroute, notifierroutes
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from app.config.database import engine
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import JSONResponse
 
-user_model.Base.metadata.create_all(bind=engine)
+
+# user_model.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+   return JSONResponse(
+       status_code=422,
+       content={"message": "Not Accepted"},)
 
 origins = [
     "http://localhost:3000",
     "http://localhost:4200",
     "http://localhost:4202"
 ]
+
+
 
 app.add_middleware(
     CORSMiddleware,
