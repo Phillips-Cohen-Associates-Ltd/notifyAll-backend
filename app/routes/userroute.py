@@ -44,6 +44,11 @@ def user_login(form_data: OAuth2PasswordRequestForm = Depends(),db: Session= Dep
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
         )
+    if not user.is_email_verified:
+       raise HTTPException(
+           status_code=status.HTTP_401_UNAUTHORIZED,
+           detail="Email not verified",
+       )
     access_token = create_access_token(
         data={"sub": user.email}
     )

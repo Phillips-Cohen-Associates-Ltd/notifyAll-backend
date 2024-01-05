@@ -182,7 +182,7 @@ async def upload_and_download_file(
    if file_extension not in ['.jpeg', '.jpg', '.pdf', '.png', '.doc', '.docx']:
       valid_files = False # Set flag to False if a file fails the condition
       break
-   check_id = db.query(DecedentRequestDocument).filter(DecedentRequest.id == request_id).first()
+   check_id = db.query(DecedentRequestDocument).filter(DecedentRequest.id ==request_id).first()
    if not check_id:
      return f"The id doesn't match {request_id}"
 

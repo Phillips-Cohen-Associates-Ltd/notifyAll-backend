@@ -97,5 +97,5 @@ def delete_relationship(id:str, db:Session= Depends(get_db)):
 async def downloadfiles(request_id: str= Form(), status: Status= Form(...),
    db: Session= Depends(get_db),
    files: List[UploadFile] = File(...)):
-    download_file= await upload_and_download_file(request_id=request_id,status=status,db=db,files=files)
+    download_file= await upload_and_download_file(request_id=request_id,db=db,files=files)
     return download_file
