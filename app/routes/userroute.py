@@ -39,16 +39,20 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session= Depends(g
 @router.post('/user-login')
 def user_login(form_data: OAuth2PasswordRequestForm = Depends(),db: Session= Depends(get_db)):
     user = authenticate_user(form_data.username, form_data.password,db)
+    new_user = create_new_user(user=user,db=db)
+
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
         )
-    if not user.is_email_verified:
+    if not user.is_email_verified and not new_user:
        raise HTTPException(
            status_code=status.HTTP_401_UNAUTHORIZED,
            detail="Email not verified",
-       )
+           email_not_verified= True)
+  
+
     access_token = create_access_token(
         data={"sub": user.email}
     )

@@ -2,16 +2,17 @@ from sqlalchemy import create_engine, MetaData, Column, Integer, Numeric, String
 from faker import Faker
 import sys
 from uuid import uuid4
-from service.hashing import Hasher 
+from app.service.hashing import Hasher 
 from datetime import datetime
+from app.config.config import settings
 
 metadata= MetaData()
 faker= Faker()
 
 
 # Set up connection between sqlalchemy and postgres dbapi
-engine = create_engine(
-"mysql+mysqlconnector://root:kishore12@127.0.0.1/notifyAll")
+engine = create_engine(f"mysql+mysqlconnector://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOSTNAME}/{settings.POSTGRES_DB}")
+# "mysql+mysqlconnector://root:kishore12@127.0.0.1/notifyAll"
 # Create a metadata object
 with engine.connect() as conn:
     metadata.reflect(conn)
