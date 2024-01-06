@@ -9,7 +9,7 @@ from fastapi_utils.guid_type import GUID, GUID_DEFAULT_SQLITE
 
 class DecedentRequest(Base):
    __tablename__ = 'decedent_requests'
-   id = Column(String(36), primary_key=True, default=str(uuid4()))
+   id = Column(String(36), primary_key=True)
    user_id = Column(String(36), nullable=True)
    funeral_home_id = Column(String(36), nullable=True)
    notifier_salutation = Column(String(5), nullable=True)
@@ -123,7 +123,7 @@ class DecedentRequest(Base):
 class DecedentRequestsDraft(Base):
    __tablename__ = 'decedent_requests_draft'
    
-   id = Column(String(36), primary_key=True)
+   id = Column(String(100), primary_key=True)
    user_id = Column(String(36), nullable=False)
    funeral_home_id = Column(String(36))
    notifier_salutation = Column(String(5))

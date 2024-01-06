@@ -1,4 +1,4 @@
-from ..schemas.notifierinformationschemas import NotifierRegistrationschema, DecedentRegistrationschema, CreateIdentificationSchemas, EditIdentificationSchema, RelationshipBaseSchema, CreateRelationshipSchemas, EditRelationshipSchema, FileUploadSchema, Status
+from ..schemas.notifierinformationschemas import NotifierRegistrationschema, DecedentRegistrationschema, CreateIdentificationSchemas, EditIdentificationSchema, RelationshipBaseSchema, CreateRelationshipSchemas, EditRelationshipSchema, FileUploadSchema, Status, UpdateNotifierSchema, UpdateDecedentSchema
 from ..models.user_model import Users
 from sqlalchemy.orm import Session
 from ..models.requests_model import DecedentRequest, DecedentRequestDocument
@@ -53,10 +53,10 @@ def create_new_notifier(notifier: NotifierRegistrationschema, user_id:str,db:Ses
     db.refresh(notifier)
     return notifier
 
-def create_new_decedent(decedent: DecedentRegistrationschema, db:Session):
-    check_id=db.query(DecedentRequest).filter(DecedentRequest.id==decedent.id).first()
+def create_new_decedent( id:str,decedent: DecedentRegistrationschema,db:Session):
+    check_id=db.query(DecedentRequest).filter(DecedentRequest.id==id).first()
     if check_id:
-        decedent= update(DecedentRequest).where(DecedentRequest.id == decedent.id).values(ssn_number= Hasher.get_password_hash(decedent.ssn_number),
+        decedent= update(DecedentRequest).where(DecedentRequest.id == id).values(ssn_number= Hasher.get_password_hash(decedent.ssn_number),
          decedent_first_name= decedent.decedent_first_name,
          decedent_last_name= decedent.decedent_last_name,
          present_address= decedent.present_address,
@@ -221,3 +221,61 @@ async def upload_and_download_file(
  db.commit()
 
  return {"message": "Files uploaded successfully", "uploaded_files": uploaded_files}
+
+def get_notifier_by_id(user_id:str, db:Session):
+   notifier= db.query(DecedentRequest).filter(DecedentRequest.user_id==user_id).first()
+   return notifier
+
+def get_decedent_by_id(user_id:str, db:Session):
+   decedent= db.query(DecedentRequest).filter(DecedentRequest.user_id==user_id).first()
+   return decedent
+
+def update_notifier_by_id(notifier: UpdateNotifierSchema,user_id:str, db:Session):
+  verify_id= db.query(DecedentRequest).filter(DecedentRequest.user_id==user_id).first()
+  if not verify_id:
+       return
+  notifier= update(DecedentRequest).where(DecedentRequest.user_id == user_id).values(name= notifier.name,
+    country= notifier.country,
+    address= notifier.address,
+    apartment= notifier.apartment,
+    state= notifier.state,
+    city= notifier.city,
+    country_code= notifier.country_code,
+    zipcode=notifier.zipcode,
+    email=notifier.email,
+    phone_number= notifier.phone_number,
+    relationship= notifier.relationship,
+    person_dealing_with_estate= notifier.person_dealing_with_estate,
+    person_dealing_name= notifier.person_dealing_name,
+    person_dealing_phone_number= notifier.person_dealing_phone_number,
+    is_verify_identity= notifier.is_verify_identity,
+    probate_applied= notifier.probate_applied,
+    identification_id= notifier.identification_id,
+    id_number=notifier.id_number)
+  db.execute(notifier)
+  db.commit()
+  return True
+
+def update_decedent_by_id(decedent: UpdateDecedentSchema,user_id:str, db:Session):
+    verify_id= db.query(DecedentRequest).filter(DecedentRequest.user_id==user_id).first()
+    if not verify_id:
+       return
+    decedent= update(DecedentRequest).where(DecedentRequest.user_id == user_id).values(ssn_number= Hasher.get_password_hash(decedent.ssn_number),
+         decedent_first_name= decedent.decedent_first_name,
+         decedent_last_name= decedent.decedent_last_name,
+         present_address= decedent.present_address,
+         present_address_two= decedent.present_address_two,
+         previous_address= decedent.previous_address,
+         previous_address_two= decedent.present_address_two,
+         second_previous_address= decedent.second_previous_address,
+         second_previous_address_two= decedent.second_previous_address,
+         third_previous_address= decedent.third_previous_address,
+         third_previous_address_two= decedent.third_previous_address_two,
+         date_of_birth= decedent.date_of_birth,
+         date_of_death= decedent.date_of_death,
+         certificate_id= decedent.certificate_id,
+         certificate_number= decedent.certificate_number)
+    
+    db.execute(decedent)
+    db.commit()
+    return True

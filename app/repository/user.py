@@ -7,6 +7,8 @@ from ..config.database import get_db
 from ..service.hashing import Hasher
 from..service.utils import Utils
 import binascii
+from uuid import uuid4
+
 
 
 def create_new_user(user:RegisterUsersSchema,db:Session):
@@ -15,6 +17,7 @@ def create_new_user(user:RegisterUsersSchema,db:Session):
         return
     
     user = Users(
+        id=str(uuid4()),
         name = user.name,
         email = user.email,
         password=Hasher.get_password_hash(user.password),

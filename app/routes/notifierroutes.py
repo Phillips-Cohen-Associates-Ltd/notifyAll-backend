@@ -1,10 +1,11 @@
 from fastapi import APIRouter,status, Depends, HTTPException, UploadFile, File,Form
 from fastapi.responses import FileResponse
-from ..schemas.notifierinformationschemas import NotifierRegistrationschema, DecedentRegistrationschema, IdentificationBaseSchema, CreateIdentificationSchemas, EditIdentificationSchema, RelationshipBaseSchema, CreateRelationshipSchemas, EditRelationshipSchema, FileUploadSchema,Status
+from ..schemas.notifierinformationschemas import NotifierRegistrationschema, DecedentRegistrationschema, IdentificationBaseSchema, CreateIdentificationSchemas, EditIdentificationSchema, RelationshipBaseSchema, CreateRelationshipSchemas, EditRelationshipSchema, FileUploadSchema,Status, NotifierResponse, DecedentResponse, UpdateNotifierSchema, UpdateDecedentSchema
 from sqlalchemy.orm import Session
 from ..models.requests_model import DecedentRequestDocument, DecedentRequest
 from ..models.user_model import Users
-from ..repository.notifier import create_new_notifier, create_new_decedent, create_new_identification, edit_identification_by_id, delete_identification_by_id, create_new_relationship, edit_relationship_by_id, delete_relationship_by_id, upload_and_download_file
+from ..routes.userroute import get_current_user
+from ..repository.notifier import create_new_notifier, create_new_decedent, create_new_identification, edit_identification_by_id, delete_identification_by_id, create_new_relationship, edit_relationship_by_id, delete_relationship_by_id, upload_and_download_file, get_notifier_by_id,get_decedent_by_id, update_notifier_by_id, update_decedent_by_id
 from ..config.database import get_db
 import json, os, shutil, mimetypes
 from typing import List
@@ -21,8 +22,8 @@ def create_notifier(notifier:NotifierRegistrationschema, user_id:str, db: Sessio
     return "notifier account created successfully"
 
 @router.post('/decedent-register', status_code=status.HTTP_201_CREATED)
-def create_decedent(decedent:DecedentRegistrationschema, db: Session = Depends(get_db)):
-    new_user = create_new_decedent(decedent= decedent,db=db)
+def create_decedent(id:str, decedent:DecedentRegistrationschema, db: Session = Depends(get_db)):
+    new_user = create_new_decedent(decedent= decedent,id=id,db=db)
     if not new_user:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
                             detail=f'ID already exists')
@@ -99,3 +100,41 @@ async def downloadfiles(request_id: str= Form(), status: Status= Form(...),
    files: List[UploadFile] = File(...)):
     download_file= await upload_and_download_file(request_id=request_id,db=db,files=files)
     return download_file
+
+
+@router.get('/get-notifer', response_model=NotifierResponse)
+def get_notifier(db: Session = Depends(get_db), currentUser:DecedentRequest=Depends(get_current_user)):
+    notifier= get_notifier_by_id(user_id= currentUser.id, db=db)
+    if not notifier:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"No user with this id: {currentUser.id} found")
+    # return {"status": "success", "users": user}
+    return notifier
+
+@router.get('/get-decedent', response_model=DecedentResponse)
+def get_decedent(db: Session = Depends(get_db), currentUser:DecedentRequest=Depends(get_current_user)):
+    decedent= get_decedent_by_id(user_id= currentUser.id, db=db)
+    if not decedent:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f"No user with this id: {currentUser.id} found")
+    # return {"status": "success", "users": user}
+    return decedent
+
+@router.patch('/update-notifier')
+def update_notifier(notifier: UpdateNotifierSchema, db: Session = Depends(get_db), currentUser:DecedentRequest=Depends(get_current_user)):
+    update_notifier = update_notifier_by_id(user_id = currentUser.id, notifier=notifier, db=db)
+    if not update_notifier:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f'No user_id found or notifier exists')
+    
+    return {"status": "success", "message": "Notifier details updated successfully"}
+
+@router.patch('/update-decedent')
+def update_decedent(decedent: UpdateDecedentSchema, db: Session = Depends(get_db), currentUser:DecedentRequest=Depends(get_current_user)):
+    update_decedent = update_decedent_by_id(user_id = currentUser.id, decedent=decedent, db=db)
+    if not update_decedent:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
+                            detail=f'No user_id found or notifier exists')
+    
+    return {"status": "success", "message": "Decedent details updated successfully"}
+

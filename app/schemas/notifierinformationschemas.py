@@ -66,7 +66,6 @@ class NotifierRegistrationschema(BaseModel):
 #    available_for_contact = Column(TINYINT(1), nullable=False)
 
 class DecedentRegistrationschema(BaseModel):
-       id: str
        ssn_number: str
        decedent_first_name: str
        decedent_last_name: str
@@ -159,6 +158,83 @@ class FileUploadSchema(BaseModel):
     request_id: str  
     status: int
 
+class NotifierResponse(BaseModel):
+        name: str
+        country: int
+        address: str
+        apartment: str
+        country_code: str
+        state: int
+        city: int
+        zipcode: str
+        email: str
+        phone_flag_code: Optional[str]
+        phone_number: str
+        relationship: Relationship
+        person_dealing_with_estate: bool
+        person_dealing_name: Optional[str]
+        person_dealing_phone_number: Optional[str]
+        is_verify_identity: bool
+        probate_applied: bool
+        identification_id: Optional[IDType]
+        id_number: Optional[str]
+       
+        class Config:
+          from_attributes = True
 
+class DecedentResponse(BaseModel):
+       ssn_number: str
+       decedent_first_name: str
+       decedent_last_name: str
+       present_address: str        
+       present_address_two: Optional[str]
+       previous_address: Optional[str]
+       previous_address_two: Optional[str]
+       second_previous_address: Optional[str]
+       second_previous_address_two: Optional[str]
+       third_previous_address: Optional[str]
+       third_previous_address_two: Optional[str]
+       date_of_birth: Optional[date]
+       date_of_death: Optional[date]
+       certificate_id: Optional[Certificate_id]
+       certificate_number: Optional[str]
+       class Config:
+          from_attributes = True
 
+class UpdateNotifierSchema(BaseModel):
+        name: str
+        country: int
+        address: str
+        apartment: str
+        country_code: str
+        state: int
+        city: int
+        zipcode: str
+        email: str
+        phone_flag_code: Optional[str]
+        phone_number: str
+        relationship: Relationship
+        person_dealing_with_estate: bool
+        person_dealing_name: Optional[str]
+        person_dealing_phone_number: Optional[str]
+        is_verify_identity: bool
+        probate_applied: bool
+        identification_id: Optional[IDType]
+        id_number: Optional[str]
 
+class UpdateDecedentSchema(BaseModel):
+       ssn_number: str
+       decedent_first_name: str
+       decedent_last_name: str
+       present_address: str        
+       present_address_two: Optional[str]
+       previous_address: Optional[str]
+       previous_address_two: Optional[str]
+       second_previous_address: Optional[str]
+       second_previous_address_two: Optional[str]
+       third_previous_address: Optional[str]
+       third_previous_address_two: Optional[str]
+       date_of_birth: Optional[date]
+       date_of_death: Optional[date]
+       certificate_id: Optional[Certificate_id]
+       certificate_number: Optional[str]

@@ -15,14 +15,13 @@ app = FastAPI()
 async def validation_exception_handler(request: Request, exc: RequestValidationError):
    return JSONResponse(
        status_code=422,
-       content={"message": "Not Accepted"},)
+       content={"message": "Not Accepted"})
 
 origins = [
     "http://localhost:3000",
     "http://localhost:4200",
     "http://localhost:4202"
 ]
-
 
 
 app.add_middleware(
