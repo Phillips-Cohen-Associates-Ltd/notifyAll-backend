@@ -222,16 +222,16 @@ async def upload_and_download_file(
 
  return {"message": "Files uploaded successfully", "uploaded_files": uploaded_files}
 
-def get_notifier_by_id(user_id:str, db:Session):
-   notifier= db.query(DecedentRequest).filter(DecedentRequest.user_id==user_id).first()
+def get_notifier_by_id(user_id:str, id:str, db:Session):
+   notifier= db.query(DecedentRequest).filter(DecedentRequest.user_id==user_id and DecedentRequest.id==id).first()
    return notifier
 
-def get_decedent_by_id(user_id:str, db:Session):
-   decedent= db.query(DecedentRequest).filter(DecedentRequest.user_id==user_id).first()
+def get_decedent_by_id(user_id:str,id:str, db:Session):
+   decedent= db.query(DecedentRequest).filter(DecedentRequest.user_id==user_id and DecedentRequest.id==id).first()
    return decedent
 
-def update_notifier_by_id(notifier: UpdateNotifierSchema,user_id:str, db:Session):
-  verify_id= db.query(DecedentRequest).filter(DecedentRequest.user_id==user_id).first()
+def update_notifier_by_id(notifier: UpdateNotifierSchema,user_id:str,id:str, db:Session):
+  verify_id= db.query(DecedentRequest).filter(DecedentRequest.user_id==user_id and DecedentRequest.id==id).first()
   if not verify_id:
        return
   notifier= update(DecedentRequest).where(DecedentRequest.user_id == user_id).values(name= notifier.name,
@@ -256,8 +256,8 @@ def update_notifier_by_id(notifier: UpdateNotifierSchema,user_id:str, db:Session
   db.commit()
   return True
 
-def update_decedent_by_id(decedent: UpdateDecedentSchema,user_id:str, db:Session):
-    verify_id= db.query(DecedentRequest).filter(DecedentRequest.user_id==user_id).first()
+def update_decedent_by_id(id:str,decedent: UpdateDecedentSchema,user_id:str, db:Session):
+    verify_id= db.query(DecedentRequest).filter(DecedentRequest.user_id==user_id and DecedentRequest.id==id).first()
     if not verify_id:
        return
     decedent= update(DecedentRequest).where(DecedentRequest.user_id == user_id).values(ssn_number= Hasher.get_password_hash(decedent.ssn_number),

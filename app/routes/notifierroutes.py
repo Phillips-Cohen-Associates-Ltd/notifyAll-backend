@@ -103,8 +103,8 @@ async def downloadfiles(request_id: str= Form(), status: Status= Form(...),
 
 
 @router.get('/get-notifer', response_model=NotifierResponse)
-def get_notifier(db: Session = Depends(get_db), currentUser:DecedentRequest=Depends(get_current_user)):
-    notifier= get_notifier_by_id(user_id= currentUser.id, db=db)
+def get_notifier(id:str,db: Session = Depends(get_db), currentUser:DecedentRequest=Depends(get_current_user)):
+    notifier= get_notifier_by_id(id=id,user_id= currentUser.id, db=db)
     if not notifier:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"No user with this id: {currentUser.id} found")
@@ -112,8 +112,8 @@ def get_notifier(db: Session = Depends(get_db), currentUser:DecedentRequest=Depe
     return notifier
 
 @router.get('/get-decedent', response_model=DecedentResponse)
-def get_decedent(db: Session = Depends(get_db), currentUser:DecedentRequest=Depends(get_current_user)):
-    decedent= get_decedent_by_id(user_id= currentUser.id, db=db)
+def get_decedent(id:str,db: Session = Depends(get_db), currentUser:DecedentRequest=Depends(get_current_user)):
+    decedent= get_decedent_by_id(id=id,user_id= currentUser.id, db=db)
     if not decedent:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f"No user with this id: {currentUser.id} found")
@@ -121,8 +121,8 @@ def get_decedent(db: Session = Depends(get_db), currentUser:DecedentRequest=Depe
     return decedent
 
 @router.patch('/update-notifier')
-def update_notifier(notifier: UpdateNotifierSchema, db: Session = Depends(get_db), currentUser:DecedentRequest=Depends(get_current_user)):
-    update_notifier = update_notifier_by_id(user_id = currentUser.id, notifier=notifier, db=db)
+def update_notifier(id:str,notifier: UpdateNotifierSchema, db: Session = Depends(get_db), currentUser:DecedentRequest=Depends(get_current_user)):
+    update_notifier = update_notifier_by_id(id=id,user_id = currentUser.id, notifier=notifier, db=db)
     if not update_notifier:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'No user_id found or notifier exists')
@@ -130,8 +130,8 @@ def update_notifier(notifier: UpdateNotifierSchema, db: Session = Depends(get_db
     return {"status": "success", "message": "Notifier details updated successfully"}
 
 @router.patch('/update-decedent')
-def update_decedent(decedent: UpdateDecedentSchema, db: Session = Depends(get_db), currentUser:DecedentRequest=Depends(get_current_user)):
-    update_decedent = update_decedent_by_id(user_id = currentUser.id, decedent=decedent, db=db)
+def update_decedent(id:str, decedent: UpdateDecedentSchema, db: Session = Depends(get_db), currentUser:DecedentRequest=Depends(get_current_user)):
+    update_decedent = update_decedent_by_id(id=id, user_id = currentUser.id, decedent=decedent, db=db)
     if not update_decedent:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
                             detail=f'No user_id found or notifier exists')
