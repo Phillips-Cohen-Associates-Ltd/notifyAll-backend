@@ -1,6 +1,6 @@
 from datetime import date,datetime
 from typing import List, Optional
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, validator, ValidationError
 from uuid import uuid4
 import uuid
 from fastapi_utils.guid_type import GUID, GUID_DEFAULT_SQLITE
@@ -35,11 +35,23 @@ class Status(int,Enum):
      success= 1
      Failed= 0
 
+class Notifier_salutation(str,Enum):
+     Mr= "Mr"
+     Mrs="Mrs"
+     Dr= "Dr"
+
+class Decedent_salutation(str,Enum):
+     Mr= "Mr"
+     Mrs="Mrs"
+     Dr= "Dr"
 
 class NotifierRegistrationschema(BaseModel):
         # id: str
         # user_id: str
+        Salutation: Notifier_salutation
         name: str
+        middle_name: Optional[str]
+        last_name:str
         country: int
         address: str
         apartment: str
@@ -51,36 +63,70 @@ class NotifierRegistrationschema(BaseModel):
         phone_flag_code: str
         phone_number: str
         relationship: Relationship
-        person_dealing_with_estate: bool
-        person_dealing_name: Optional[str]
-        person_dealing_phone_number: Optional[str]
-        is_verify_identity: bool
+        is_spouse: bool
+        spouse_sin: Optional[str]
+        spouse_date_of_birth: Optional[date]
+        spouse_first_name: Optional[str]
+        spouse_middle_name: Optional[str]
+        spouse_last_name: Optional[str]
+        is_there_is_will: bool
         probate_applied: bool
-        identification_id: Optional[IDType]
-        id_number: Optional[str]
-       
-        class Config:
-          from_attributes = True
-          populate_by_name = True
-          arbitrary_types_allowed = True
+     
+        
+        @validator('is_spouse')
+        def check_is_spouse(cls, v):
+          if v not in [False, True]:
+            raise ValueError("is_spouse must be either False or True")
+          return v
+
+        @validator('spouse_sin', 'spouse_date_of_birth', 'spouse_first_name', 'spouse_last_name', pre=True, always=True)
+        def check_spouse_details(cls, v,values):
+          if 'is_spouse' in values and values['is_spouse'] == True:
+               if v is None:
+                 raise ValueError(f"Spouse details must be provided if is_spouse is True")
+          return v
 #    available_for_contact = Column(TINYINT(1), nullable=False)
 
 class DecedentRegistrationschema(BaseModel):
-       ssn_number: str
-       decedent_first_name: str
-       decedent_last_name: str
+       deceased_salutation: Decedent_salutation
+       first_name_of_departed: str
+       middle_name_of_departed: Optional[str]
+       last_name_of_departed: str
+       deceased_persons_phone_flag: str
+       deceased_persons_phone_number: str
+       deceased_persons_sex: str
+       deceased_persons_marital_status:str
+       deceased_persons_country: str
+       deceased_persons_state: str
+       deceased_persons_citizenship: str
+       decedent_first_name : Optional[str]
+       decedent_last_name : Optional[str]
+       present_city: int
+       present_state: int
+       present_country: int
+       present_zipcode : str
        present_address: str        
        present_address_two: Optional[str]
+       previous_city : Optional[int]
+       previous_state : Optional[int]
+       previous_country: Optional[int]
+       previous_zipcode : Optional[str]
        previous_address: Optional[str]
        previous_address_two: Optional[str]
+       second_previous_city : Optional[int]
+       second_previous_state: Optional[int]
+       second_previous_country: Optional[int]
+       second_previous_zipcode : Optional[str]
+       third_previous_city : Optional[int]
+       third_previous_state: Optional[int]
+       third_previous_country: Optional[int]
+       third_previous_zipcode : Optional[str]    
        second_previous_address: Optional[str]
        second_previous_address_two: Optional[str]
        third_previous_address: Optional[str]
        third_previous_address_two: Optional[str]
        date_of_birth: Optional[date]
        date_of_death: Optional[date]
-       certificate_id: Optional[Certificate_id]
-       certificate_number: Optional[str]
        class Config:
           from_attributes = True
           populate_by_name = True
@@ -160,6 +206,8 @@ class FileUploadSchema(BaseModel):
 
 class NotifierResponse(BaseModel):
         name: str
+        middle_name: Optional[str]
+        last_name:str
         country: int
         address: str
         apartment: str
@@ -171,38 +219,66 @@ class NotifierResponse(BaseModel):
         phone_flag_code: Optional[str]
         phone_number: str
         relationship: Relationship
-        person_dealing_with_estate: bool
-        person_dealing_name: Optional[str]
-        person_dealing_phone_number: Optional[str]
-        is_verify_identity: bool
+        is_spouse: bool
+        spouse_sin: Optional[str]
+        spouse_date_of_birth: Optional[date]
+        spouse_first_name: Optional[str]
+        spouse_middle_name: Optional[str]
+        spouse_last_name: Optional[str]
+        is_there_is_will: bool
         probate_applied: bool
-        identification_id: Optional[IDType]
-        id_number: Optional[str]
+ 
        
         class Config:
           from_attributes = True
 
 class DecedentResponse(BaseModel):
-       ssn_number: str
-       decedent_first_name: str
-       decedent_last_name: str
+       deceased_salutation: Decedent_salutation
+       first_name_of_departed: str
+       middle_name_of_departed: Optional[str]
+       last_name_of_departed: str
+       deceased_persons_phone_flag: str
+       deceased_persons_phone_number: str
+       deceased_persons_sex: str
+       deceased_persons_marital_status:str
+       deceased_persons_country: str
+       deceased_persons_state: str
+       deceased_persons_citizenship: str
+       decedent_first_name : Optional[str]
+       decedent_last_name : Optional[str]
+       present_city: int
+       present_state: int
+       present_country: int
+       present_zipcode : str
        present_address: str        
        present_address_two: Optional[str]
+       previous_city : Optional[int]
+       previous_state : Optional[int]
+       previous_country: Optional[int]
+       previous_zipcode : Optional[str]
        previous_address: Optional[str]
        previous_address_two: Optional[str]
+       second_previous_city : Optional[int]
+       second_previous_state: Optional[int]
+       second_previous_country: Optional[int]
+       second_previous_zipcode : Optional[str]
+       third_previous_city : Optional[int]
+       third_previous_state: Optional[int]
+       third_previous_country: Optional[int]
+       third_previous_zipcode : Optional[str]    
        second_previous_address: Optional[str]
        second_previous_address_two: Optional[str]
        third_previous_address: Optional[str]
        third_previous_address_two: Optional[str]
        date_of_birth: Optional[date]
        date_of_death: Optional[date]
-       certificate_id: Optional[Certificate_id]
-       certificate_number: Optional[str]
        class Config:
           from_attributes = True
 
 class UpdateNotifierSchema(BaseModel):
         name: str
+        middle_name: Optional[str]
+        last_name:str
         country: int
         address: str
         apartment: str
@@ -211,30 +287,55 @@ class UpdateNotifierSchema(BaseModel):
         city: int
         zipcode: str
         email: str
-        phone_flag_code: Optional[str]
+        phone_flag_code: str
         phone_number: str
         relationship: Relationship
-        person_dealing_with_estate: bool
-        person_dealing_name: Optional[str]
-        person_dealing_phone_number: Optional[str]
-        is_verify_identity: bool
+        is_spouse: bool
+        spouse_sin: Optional[str]
+        spouse_date_of_birth: Optional[date]
+        spouse_first_name: Optional[str]
+        spouse_middle_name: Optional[str]
+        spouse_last_name: Optional[str]
+        is_there_is_will: bool
         probate_applied: bool
-        identification_id: Optional[IDType]
-        id_number: Optional[str]
 
 class UpdateDecedentSchema(BaseModel):
-       ssn_number: str
-       decedent_first_name: str
-       decedent_last_name: str
+       deceased_salutation: Decedent_salutation
+       first_name_of_departed: str
+       middle_name_of_departed: Optional[str]
+       last_name_of_departed: str
+       deceased_persons_phone_flag: str
+       deceased_persons_phone_number: str
+       deceased_persons_sex: str
+       deceased_persons_marital_status:str
+       deceased_persons_country: str
+       deceased_persons_state: str
+       deceased_persons_citizenship: str
+       decedent_first_name : Optional[str]
+       decedent_last_name : Optional[str]
+       present_city: int
+       present_state: int
+       present_country: int
+       present_zipcode : str
        present_address: str        
        present_address_two: Optional[str]
+       previous_city : Optional[int]
+       previous_state : Optional[int]
+       previous_country: Optional[int]
+       previous_zipcode : Optional[str]
        previous_address: Optional[str]
        previous_address_two: Optional[str]
+       second_previous_city : Optional[int]
+       second_previous_state: Optional[int]
+       second_previous_country: Optional[int]
+       second_previous_zipcode : Optional[str]
+       third_previous_city : Optional[int]
+       third_previous_state: Optional[int]
+       third_previous_country: Optional[int]
+       third_previous_zipcode : Optional[str]    
        second_previous_address: Optional[str]
        second_previous_address_two: Optional[str]
        third_previous_address: Optional[str]
        third_previous_address_two: Optional[str]
        date_of_birth: Optional[date]
        date_of_death: Optional[date]
-       certificate_id: Optional[Certificate_id]
-       certificate_number: Optional[str]
