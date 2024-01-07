@@ -66,15 +66,6 @@ def create_relationship(relationship: CreateRelationshipSchemas, db: Session= De
     return "Relationship created successfully"
 
 
-# @router.post('/edit-relationship', status_code=status.HTTP_201_CREATED)
-# def edit_relationship(editrelationship:EditRelationshipSchema, db:Session= Depends(get_db)):
-#     updated_relationship= edit_relationship_by_id(editrelationship=editrelationship, db=db)
-#     if not updated_relationship:
-#         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,
-#                             detail=f'ID already exists')
-#     return "Identification Id updated successfully"
-
-
 @router.post('/edit-relationship', status_code=status.HTTP_201_CREATED)
 def edit_relationship(editrelationship:EditRelationshipSchema, db:Session= Depends(get_db)):
     updated_relationship_name= edit_relationship_by_id(editrelationship=editrelationship, db=db)

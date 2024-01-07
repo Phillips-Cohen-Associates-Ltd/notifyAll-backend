@@ -7,11 +7,13 @@ class Country(Base):
    __tablename__ = 'country'
    id= Column(Integer, primary_key=True)
    name = Column(String(100))
+   iso2= Column(String(10))
+   dial_code= Column(String(100))
    countryCode = Column(String(100), primary_key=True)
    created_at = Column(TIMESTAMP(timezone=True),
                        nullable=False, server_default=func.now())
    updated_at = Column(TIMESTAMP(timezone=True),
-                       default=None, onupdate=func.now())
+                       default=None, onupdate=func.now()) 
 
 class State(Base):
    __tablename__ = 'state'
@@ -30,6 +32,7 @@ class City(Base):
    id= Column(Integer, primary_key=True)
    name = Column(String(255))
    state_id= Column(Integer, ForeignKey('state.id'))
+   country_id= Column(Integer, ForeignKey('country.id'))
    created_at = Column(TIMESTAMP(timezone=True),
                        nullable=False, server_default=func.now())
    updated_at = Column(TIMESTAMP(timezone=True),
