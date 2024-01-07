@@ -20,8 +20,7 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
    op.add_column('country', sa.Column('iso2', sa.String(length=5)))
-   op.add_column('country', sa.Column('iso3', sa.String(length=5)))
-   op.add_column('country', sa.Column('dial_code', sa.Integer()))
+   op.add_column('country', sa.Column('dial_code', sa.String(100)))
    op.add_column('city', sa.Column('country_id', sa.Integer(), sa.ForeignKey('country.id')))
 
 

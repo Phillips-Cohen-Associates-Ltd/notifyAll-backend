@@ -7,8 +7,8 @@ class Country(Base):
    __tablename__ = 'country'
    id= Column(Integer, primary_key=True)
    name = Column(String(100))
-   iso2= Column(String(5))
-   dial_code= Column(String(10))
+   iso2= Column(String(10))
+   dial_code= Column(String(100))
    countryCode = Column(String(100), primary_key=True)
    created_at = Column(TIMESTAMP(timezone=True),
                        nullable=False, server_default=func.now())
