@@ -2,9 +2,9 @@ from ..schemas.notifierinformationschemas import NotifierRegistrationschema, Dec
 from ..models.user_model import Users
 from sqlalchemy.orm import Session
 from ..models.requests_model import DecedentRequest, DecedentRequestDocument
-from app.schemas.countriesapi import Countries,States,CountriesStates, Cities, CityDetail
+from app.schemas.countriesapi import Countries,States,CountriesStates, Cities, CityDetail, StateDetail
 from ..models.country_state_city_model import Country, State, City
-from typing import List
+from typing import List, Union
 from pydantic import BaseModel, validator, ValidationError
 from sqlalchemy.exc import SQLAlchemyError
 from ..models.identification_model import Identification
@@ -222,13 +222,21 @@ def get_cities( city_id: int,db:Session):
       return []
    return cities
 
+
+def post_state_details(db:Session,state_detail= StateDetail):
+   states= db.query(State).filter(State.country_id== state_detail.country_id, State.name==state_detail.name).all()
+   if not states:
+         return []
+   return states
+
 def post_city_details(db:Session,city_detail= CityDetail):
-   cities= db.query(City.country_id== city_detail.country_id, City.state_id==city_detail.state_id, City.name==city_detail.city).all()
+   cities= db.query(City).filter(City.country_id== city_detail.country_id, City.state_id==city_detail.state_id, City.name==city_detail.city).all()
    print("*********************", cities)
    if not cities:
-         return {"status": "error", "message": "No city found"}
+         return []
    return cities
-   
+
+
    
 
 
