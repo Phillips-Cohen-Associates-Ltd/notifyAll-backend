@@ -2,7 +2,7 @@ from ..schemas.notifierinformationschemas import NotifierRegistrationschema, Dec
 from ..models.user_model import Users
 from sqlalchemy.orm import Session
 from ..models.requests_model import DecedentRequest, DecedentRequestDocument
-from app.schemas.countriesapi import Countries,States,CountriesStates, Cities
+from app.schemas.countriesapi import Countries,States,CountriesStates, Cities, CityDetail
 from ..models.country_state_city_model import Country, State, City
 from typing import List
 from pydantic import BaseModel, validator, ValidationError
@@ -216,12 +216,20 @@ def get_states(country_id:int, db:Session):
  
    return states
 
-def get_cities(country_id:int,state_id:str, db:Session):
-   cities= db.query(City).filter(City.country_id==country_id, City.state_id==state_id).all()
+def get_cities( city_id: int,db:Session):
+   cities= db.query(City).filter(City.id==city_id).all()
    if not cities: 
       return []
    return cities
 
+def post_city_details(db:Session,city_detail= CityDetail):
+   cities= db.query(City.country_id== city_detail.country_id, City.state_id==city_detail.state_id, City.name==city_detail.city).all()
+   print("*********************", cities)
+   if not cities:
+         return {"status": "error", "message": "No city found"}
+   return cities
+   
+   
 
 
 async def upload_and_download_file(
