@@ -44,3 +44,15 @@ class CityList(BaseModel):
    name: str
    state_id: int
    country_id:int
+  
+class CityDetail(BaseModel):
+   city:str
+   country_id:int
+   state_id: int
+
+class CityDetailResponse(BaseModel):
+   id:int
+   city:str
+   country_id:int
+   state_id: int
+   
