@@ -99,32 +99,33 @@ class DecedentRegistrationschema(BaseModel):
        deceased_persons_country: str
        deceased_persons_state: str
        deceased_persons_citizenship: str
-       decedent_first_name : Optional[str]
-       decedent_last_name : Optional[str]
-       present_city: int
-       present_state: int
-       present_country: int
+       first_name_at_birth: Optional[str]
+       last_name_at_birth : Optional[str]
+       birth_city: int
+       birth_state: int
+       birth_country: int
        present_zipcode : str
        present_address: str        
        present_address_two: Optional[str]
-       previous_city : Optional[int]
-       previous_state : Optional[int]
-       previous_country: Optional[int]
-       previous_zipcode : Optional[str]
-       previous_address: Optional[str]
-       previous_address_two: Optional[str]
-       second_previous_city : Optional[int]
-       second_previous_state: Optional[int]
-       second_previous_country: Optional[int]
-       second_previous_zipcode : Optional[str]
-       third_previous_city : Optional[int]
-       third_previous_state: Optional[int]
-       third_previous_country: Optional[int]
-       third_previous_zipcode : Optional[str]    
-       second_previous_address: Optional[str]
-       second_previous_address_two: Optional[str]
-       third_previous_address: Optional[str]
-       third_previous_address_two: Optional[str]
+       deceased_city1 : Optional[int]
+       deceased_state1 : Optional[int]
+       deceased_country: Optional[int]
+       deceased_zipcode1 : Optional[str]
+       deceased_address1: Optional[str]
+       deceased_apt1: Optional[str]
+       deceased_city2 : Optional[int]
+       deceased_state2: Optional[int]
+       deceased_address2: Optional[str]
+       deceased_apt2: Optional[str]
+#        second_previous_country: Optional[int]
+       deceased_zipcode2 : Optional[str]
+       deceased_city3 : Optional[int]
+       deceased_state3:Optional[int]
+#        third_previous_country: Optional[int]
+       deceased_zipcode3 : Optional[str]    
+
+       deceased_address3: Optional[str]
+       deceased_apt3: Optional[str]
        date_of_birth: Optional[date]
        date_of_death: Optional[date]
        class Config:
@@ -244,32 +245,33 @@ class DecedentResponse(BaseModel):
        deceased_persons_country: str
        deceased_persons_state: str
        deceased_persons_citizenship: str
-       decedent_first_name : Optional[str]
-       decedent_last_name : Optional[str]
-       present_city: int
-       present_state: int
-       present_country: int
+       first_name_at_birth: Optional[str]
+       last_name_at_birth : Optional[str]
+       birth_city: int
+       birth_state: int
+       birth_country: int
        present_zipcode : str
        present_address: str        
        present_address_two: Optional[str]
-       previous_city : Optional[int]
-       previous_state : Optional[int]
-       previous_country: Optional[int]
-       previous_zipcode : Optional[str]
-       previous_address: Optional[str]
-       previous_address_two: Optional[str]
-       second_previous_city : Optional[int]
-       second_previous_state: Optional[int]
-       second_previous_country: Optional[int]
-       second_previous_zipcode : Optional[str]
-       third_previous_city : Optional[int]
-       third_previous_state: Optional[int]
-       third_previous_country: Optional[int]
-       third_previous_zipcode : Optional[str]    
-       second_previous_address: Optional[str]
-       second_previous_address_two: Optional[str]
-       third_previous_address: Optional[str]
-       third_previous_address_two: Optional[str]
+       deceased_city1 : Optional[int]
+       deceased_state1 : Optional[int]
+       deceased_country: Optional[int]
+       deceased_zipcode1 : Optional[str]
+       deceased_address1: Optional[str]
+       deceased_apt1: Optional[str]
+       deceased_city2 : Optional[int]
+       deceased_state2: Optional[int]
+       deceased_address2: Optional[str]
+       deceased_apt2: Optional[str]
+#        second_previous_country: Optional[int]
+       deceased_zipcode2 : Optional[str]
+       deceased_city3 : Optional[int]
+       deceased_state3:Optional[int]
+#        third_previous_country: Optional[int]
+       deceased_zipcode3 : Optional[str]    
+
+       deceased_address3: Optional[str]
+       deceased_apt3: Optional[str]
        date_of_birth: Optional[date]
        date_of_death: Optional[date]
        class Config:
@@ -311,31 +313,32 @@ class UpdateDecedentSchema(BaseModel):
        deceased_persons_country: str
        deceased_persons_state: str
        deceased_persons_citizenship: str
-       decedent_first_name : Optional[str]
-       decedent_last_name : Optional[str]
-       present_city: int
-       present_state: int
-       present_country: int
+       first_name_at_birth: Optional[str]
+       last_name_at_birth : Optional[str]
+       birth_city: int
+       birth_state: int
+       birth_country: int
        present_zipcode : str
        present_address: str        
        present_address_two: Optional[str]
-       previous_city : Optional[int]
-       previous_state : Optional[int]
-       previous_country: Optional[int]
-       previous_zipcode : Optional[str]
-       previous_address: Optional[str]
-       previous_address_two: Optional[str]
-       second_previous_city : Optional[int]
-       second_previous_state: Optional[int]
-       second_previous_country: Optional[int]
-       second_previous_zipcode : Optional[str]
-       third_previous_city : Optional[int]
-       third_previous_state: Optional[int]
-       third_previous_country: Optional[int]
-       third_previous_zipcode : Optional[str]    
-       second_previous_address: Optional[str]
-       second_previous_address_two: Optional[str]
-       third_previous_address: Optional[str]
-       third_previous_address_two: Optional[str]
+       deceased_city1 : Optional[int]
+       deceased_state1 : Optional[int]
+       deceased_country: Optional[int]
+       deceased_zipcode1 : Optional[str]
+       deceased_address1: Optional[str]
+       deceased_apt1: Optional[str]
+       deceased_city2 : Optional[int]
+       deceased_state2: Optional[int]
+       deceased_address2: Optional[str]
+       deceased_apt2: Optional[str]
+#        second_previous_country: Optional[int]
+       deceased_zipcode2 : Optional[str]
+       deceased_city3 : Optional[int]
+       deceased_state3:Optional[int]
+#        third_previous_country: Optional[int]
+       deceased_zipcode3 : Optional[str]    
+
+       deceased_address3: Optional[str]
+       deceased_apt3: Optional[str]
        date_of_birth: Optional[date]
        date_of_death: Optional[date]
