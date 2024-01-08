@@ -55,4 +55,14 @@ class CityDetailResponse(BaseModel):
    city:str
    country_id:int
    state_id: int
+
+  
+class StateDetail(BaseModel):
+   name:str
+   country_id:int
+
+class StateDetailResponse(BaseModel):
+   id:int
+   name:str
+   country_id:int
    
