@@ -1,11 +1,11 @@
 # from app.models import user_model
-from app.routes import commonroutes, userroute, notifierroutes
+from app.routes import commonroutes, notifierroutes, userroute
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from app.config.database import engine
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
-
+import asyncio
 
 # user_model.Base.metadata.create_all(bind=engine)
 
@@ -35,7 +35,8 @@ app.add_middleware(
 
 app.include_router(userroute.router, tags=['Users'], prefix='/api')
 app.include_router(commonroutes.router, tags=['Countries'], prefix='/api')
-app.include_router(notifierroutes.router, tags=['NotifierInformation'], prefix='/api')
+app.include_router(notifierroutes.router, tags=['Notifier_Information'], prefix='/api')
+
 
 # app.include_router(chatroute.router, tags=['Chat'], prefix='/chatbot')
 

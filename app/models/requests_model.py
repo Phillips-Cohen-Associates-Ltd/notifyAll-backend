@@ -175,8 +175,8 @@ class DecedentRequestsDraft(Base):
    person_dealing_phone_flag_code = Column(String(5))
    request_stage = Column(Integer, default=1)
    is_admin_updated = Column(String(5), default='0')
-   identification_id = Column(String(36), nullable=False)
-   id_number = Column(String(30), nullable=False)
+#    identification_id = Column(String(36), nullable=False)
+#    id_number = Column(String(30), nullable=False)
    city = Column(Integer)
    state = Column(Integer)
    country = Column(Integer)
@@ -236,7 +236,23 @@ class DecedentRequestDocument(Base):
     __table_args__ = (
         PrimaryKeyConstraint(id, request_id),
     )
+ 
+class DecedentRequestDocumentDraft(Base):
+    __tablename__ = "decedent_request_document_draft"
 
+    id = Column(String(36), primary_key=True, default=str(uuid4()))
+    request_id = Column(String(36), ForeignKey("decedent_requests_draft.id"), nullable=False)
+    document = Column(String(255), nullable=False)
+    status = Column(Integer, nullable=False, default=1)
+    created_at = Column(TIMESTAMP(timezone=True),
+                       nullable=False, server_default=func.now())
+    updated_at = Column(TIMESTAMP(timezone=True),
+                       default=None, onupdate=func.now())
+    size = Column(String(255), nullable=True)
+
+    __table_args__ = (
+        PrimaryKeyConstraint(id, request_id),
+    )
 
 class DecedentRequestCreditor(Base):
  __tablename__ = 'decedent_request_creditors'
@@ -268,3 +284,4 @@ class DecedentRequestCreditorDraft(Base):
  created_at = Column(TIMESTAMP, nullable=True)
  updated_at = Column(TIMESTAMP, nullable=True)
  data_id = Column(String(255), nullable=True)
+

@@ -1,11 +1,11 @@
 import pycountry
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException,BackgroundTasks
 from sqlalchemy.orm import Session
 from ..config.database import get_db
 from sqlalchemy.dialects.mysql import insert
 import requests
 from ..schemas.countriesapi import CountriesStates, CountryList, StatesList, CityList, CityDetailResponse, CityDetail, StateDetail,StateDetailResponse
-from ..repository.notifier import get_countries_states_cities, get_countries, get_states, get_cities, post_city_details, post_state_details
+from ..repository.notifier import load_countries_states_cities, get_countries, get_states, get_cities, post_city_details, post_state_details
 
 
 
@@ -14,10 +14,12 @@ file_path = '/home/kishorerayan12/countries+states+cities.json'
 
 router= APIRouter()
 
-@router.get("/countries", response_model=list[CountriesStates])
-async def get_all_countries_states_cities(db:Session= Depends(get_db)):
-   get_countries= await get_countries_states_cities(db=db)
-   return get_countries
+
+
+@router.get("/countries")
+async def get_all_countries_states_cities(background_tasks: BackgroundTasks):
+   background_tasks.add_task(load_countries_states_cities)
+   return {"message": "Loading countries, states, and cities..."}
 
 @router.get("/get-countries", response_model=list[CountryList])
 async def read_countries(db: Session = Depends(get_db)):
